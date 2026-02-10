@@ -229,9 +229,10 @@ Adjust the similarity threshold in your code or use tags for different baselines
 ## Get Help
 
 - 📚 [Full Documentation](https://bagula.ai/docs)
-- 💬 [Discord Community](https://discord.gg/bagula)
-- 🐛 [Report Issues](https://github.com/bagula-ai/bagula/issues)
+- 💬 [Discord Community](https://discord.gg/CjeXJxfSQ8)
+- 🐛 [Report Issues](https://github.com/justcopyai/bagula.ai/issues)
 - 📧 [Email Support](mailto:hello@bagula.ai)
+- 🏢 [Built by JustCopy.ai](https://justcopy.ai)
 
 ---
 

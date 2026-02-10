@@ -3,10 +3,12 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Node](https://img.shields.io/badge/Node-%3E%3D18-green)](https://nodejs.org/)
+[![Built by](https://img.shields.io/badge/Built%20by-JustCopy.ai-purple)](https://justcopy.ai)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2)](https://discord.gg/CjeXJxfSQ8)
 
 > **Your AI agent worked last week. Now it's confidently wrong. Test it before your users find out.**
 
-Bagula is an open-source AI agent operations platform that helps you test, monitor, and prevent regressions in your AI agents. Built for the new era of probabilistic software, Bagula detects the 7 critical failure modes that traditional testing misses.
+Bagula is an open-source AI agent operations platform that helps you test, monitor, and prevent regressions in your AI agents. Built by [JustCopy.ai](https://justcopy.ai) for the new era of probabilistic software, Bagula detects the 7 critical failure modes that traditional testing misses.
 
 ## 🌐 Website
 
@@ -78,8 +80,8 @@ Traditional regression testing doesn't catch these. **Bagula does.**
 **1. Deploy Bagula Platform**
 ```bash
 # Clone repo
-git clone https://github.com/bagula-ai/bagula.git
-cd bagula/platform
+git clone https://github.com/justcopyai/bagula.ai.git
+cd bagula.ai/platform
 
 # Start services (API, Database, Workers, Dashboard)
 docker-compose up -d
@@ -321,8 +323,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for deta
 
 ```bash
 # Clone the repository
-git clone https://github.com/bagula-ai/bagula.git
-cd bagula
+git clone https://github.com/justcopyai/bagula.ai.git
+cd bagula.ai
 
 # Install dependencies
 npm install
@@ -354,9 +356,19 @@ The name comes from the concept of a "guard" or "watchman" - someone who vigilan
 ## 📞 Contact & Support
 
 - **Website**: [bagula.ai](https://bagula.ai)
-- **GitHub Issues**: [github.com/bagula-ai/bagula/issues](https://github.com/bagula-ai/bagula/issues)
-- **Discord**: [Join our community](https://discord.gg/bagula)
-- **Twitter**: [@bagula_ai](https://twitter.com/bagula_ai)
+- **GitHub Issues**: [github.com/justcopyai/bagula.ai/issues](https://github.com/justcopyai/bagula.ai/issues)
+- **Discord**: [Join our community](https://discord.gg/CjeXJxfSQ8)
+- **X/Twitter**: [@justcopy_ai](https://x.com/justcopy_ai)
+
+---
+
+## 🏢 Built by JustCopy.ai
+
+Bagula is built and maintained by [**JustCopy.ai**](https://justcopy.ai) - AI-powered tools for developers and enterprises.
+
+### Other Products
+- **JustCopy.ai** - AI development platform with advanced agent capabilities
+- **Bagula** - Open source AI agent operations and monitoring
 
 ---
 
@@ -367,7 +379,7 @@ Inspired by the excellent work from:
 - Traditional testing frameworks (Jest, pytest)
 - Monitoring platforms (Datadog, New Relic)
 
-Built with ❤️ for the AI agent builders.
+Built with ❤️ by the [JustCopy.ai](https://justcopy.ai) team for AI agent builders everywhere.
 
 ---
 

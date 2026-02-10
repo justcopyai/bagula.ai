@@ -49,11 +49,11 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/bagula.git
-cd bagula
+git clone https://github.com/YOUR_USERNAME/bagula.ai.git
+cd bagula.ai
 
 # Add upstream remote
-git remote add upstream https://github.com/bagula-ai/bagula.git
+git remote add upstream https://github.com/justcopyai/bagula.ai.git
 
 # Install dependencies
 npm install
@@ -194,15 +194,15 @@ describe('TestRunner', () => {
 
 ## Community
 
-- Join our [Discord](https://discord.gg/bagula)
-- Follow us on [Twitter](https://twitter.com/bagula_ai)
-- Read our [blog](https://bagula.ai/blog)
+- Join our [Discord](https://discord.gg/CjeXJxfSQ8)
+- Follow us on [X/Twitter](https://x.com/justcopy_ai)
+- Visit [JustCopy.ai](https://justcopy.ai)
 
 ## Questions?
 
 Don't hesitate to reach out:
 - Open an issue with the `question` label
-- Ask in our [Discord](https://discord.gg/bagula)
+- Ask in our [Discord](https://discord.gg/CjeXJxfSQ8)
 - Email us at [hello@bagula.ai](mailto:hello@bagula.ai)
 
 ## License
