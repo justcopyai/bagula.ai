@@ -1,0 +1,52 @@
+name: 'Bagula AI Agent Tests'
+description: 'Run AI agent regression tests with Bagula'
+branding:
+  icon: 'check-circle'
+  color: 'purple'
+
+inputs:
+  config:
+    description: 'Path to Bagula config file'
+    required: false
+    default: 'bagula.config.json'
+
+  suite:
+    description: 'Specific test suite to run'
+    required: false
+
+  baseline:
+    description: 'Compare with baseline'
+    required: false
+    default: 'true'
+
+  save-baseline:
+    description: 'Save results as baseline'
+    required: false
+    default: 'false'
+
+  fail-on-regression:
+    description: 'Fail if regressions detected'
+    required: false
+    default: 'true'
+
+  openai-api-key:
+    description: 'OpenAI API key'
+    required: false
+
+  anthropic-api-key:
+    description: 'Anthropic API key'
+    required: false
+
+outputs:
+  passed:
+    description: 'Number of tests passed'
+  failed:
+    description: 'Number of tests failed'
+  total-cost:
+    description: 'Total cost in USD'
+  avg-latency:
+    description: 'Average latency in milliseconds'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

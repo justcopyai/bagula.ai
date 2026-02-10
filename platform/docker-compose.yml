@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # PostgreSQL with TimescaleDB extension for time-series data
+  database:
+    image: timescale/timescaledb:latest-pg15
+    container_name: bagula-db
+    environment:
+      POSTGRES_DB: bagula
+      POSTGRES_USER: bagula
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-bagula_dev_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bagula"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis for message queue and caching
+  redis:
+    image: redis:7-alpine
+    container_name: bagula-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Bagula API (Ingestion)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bagula-api
+    environment:
+      DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: info
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Background Worker (Baseline Comparison)
+  worker-baseline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bagula-worker-baseline
+    command: python -m app.workers.baseline_worker
+    environment:
+      DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
+      REDIS_URL: redis://redis:6379/0
+      WORKER_TYPE: baseline
+      LOG_LEVEL: info
+    depends_on:
+      - database
+      - redis
+    restart: unless-stopped
+
+  # Background Worker (Anomaly Detection)
+  worker-anomaly:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bagula-worker-anomaly
+    command: python -m app.workers.anomaly_worker
+    environment:
+      DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
+      REDIS_URL: redis://redis:6379/0
+      WORKER_TYPE: anomaly
+      LOG_LEVEL: info
+    depends_on:
+      - database
+      - redis
+    restart: unless-stopped
+
+  # Background Worker (Metrics Aggregation)
+  worker-metrics:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bagula-worker-metrics
+    command: python -m app.workers.metrics_worker
+    environment:
+      DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
+      REDIS_URL: redis://redis:6379/0
+      WORKER_TYPE: metrics
+      LOG_LEVEL: info
+    depends_on:
+      - database
+      - redis
+    restart: unless-stopped
+
+  # Dashboard UI (React/Next.js)
+  dashboard:
+    build:
+      context: ../packages/dashboard
+      dockerfile: Dockerfile
+    container_name: bagula-dashboard
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: bagula-network
