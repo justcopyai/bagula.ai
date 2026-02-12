@@ -79,13 +79,14 @@ AI agents in production are a black box:
 
 ## 🚀 Quick Start
 
-Bagula provides two components:
+Bagula provides three open source components:
 1. **@bagula/client** - NPM package for instrumenting your agents
 2. **bagula/platform** - Docker container with the full monitoring platform
+3. **@bagula/dashboard** - Web UI for viewing sessions and insights
 
 You can either:
 - **Self-host**: Run the platform yourself (free, open source)
-- **Use Bagula Cloud**: We host it for you (managed service)
+- **Use Bagula Cloud**: We host it for you (managed service at [bagula.ai](https://bagula.ai))
 
 ### Option A: Self-Hosted (Docker Compose)
 
@@ -255,6 +256,82 @@ ANTHROPIC_API_KEY=sk-ant-...       # Alternative for regression detection
 COST_EXPENSIVE_THRESHOLD_USD=0.10  # Cost alert threshold
 PERFORMANCE_SLOW_TOOL_THRESHOLD_MS=5000  # Performance alert threshold
 ```
+
+---
+
+## 📊 Dashboard
+
+The Bagula dashboard provides a beautiful web UI for monitoring your AI agents.
+
+### Running the Dashboard
+
+The dashboard is located at `packages/dashboard/` and can run in two modes:
+
+#### Self-Hosted Mode (No Authentication)
+Perfect for local development and self-hosted deployments.
+
+```bash
+cd packages/dashboard
+npm install
+
+# Set API endpoint
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+
+# Run development server
+npm run dev
+```
+
+Dashboard will be available at `http://localhost:3000`
+
+#### Cloud Mode (With Clerk Authentication)
+Used by Bagula Cloud for multi-tenant deployments.
+
+```bash
+cd packages/dashboard
+npm install
+
+# Configure Clerk authentication
+echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_..." > .env.local
+echo "CLERK_SECRET_KEY=sk_..." >> .env.local
+echo "NEXT_PUBLIC_API_URL=https://api.bagula.ai" >> .env.local
+
+# Run development server
+npm run dev
+```
+
+### Features
+
+**Available in all modes:**
+- Session explorer with full drill-down
+- LLM call viewer with request/response
+- Tool execution timeline
+- Opportunity cards with actionable insights
+- Cost and performance metrics
+
+**Cloud mode only:**
+- Clerk authentication
+- Organization management
+- Billing and subscriptions
+- API key management
+
+### Docker Deployment
+
+```bash
+# Self-hosted mode (no auth)
+docker build -t bagula/dashboard packages/dashboard/
+docker run -p 3000:3000 \
+  -e NEXT_PUBLIC_API_URL=http://platform:8000 \
+  bagula/dashboard
+
+# Cloud mode (with Clerk)
+docker build \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_... \
+  --build-arg CLERK_SECRET_KEY=sk_... \
+  -t bagula/dashboard \
+  packages/dashboard/
+```
+
+For more details, see `packages/dashboard/README.md`.
 
 ---
 

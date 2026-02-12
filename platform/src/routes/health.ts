@@ -7,7 +7,7 @@ import { getQueueMetrics } from '../queue/manager.js';
 
 export const healthRoutes: FastifyPluginAsync = async (fastify) => {
   // Health check endpoint
-  fastify.get('/health', async (request, reply) => {
+  fastify.get('/health', async (_request, _reply) => {
     const queueMetrics = await getQueueMetrics();
 
     return {
@@ -20,7 +20,7 @@ export const healthRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   // Metrics endpoint (for Prometheus, etc.)
-  fastify.get('/metrics', async (request, reply) => {
+  fastify.get('/metrics', async (_request, _reply) => {
     const queueMetrics = await getQueueMetrics();
 
     return {

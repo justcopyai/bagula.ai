@@ -6,7 +6,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { appConfig } from './config.js';
-import { db, closeDatabase } from './db/client.js';
+import { closeDatabase } from './db/client.js';
 import { closeQueues } from './queue/manager.js';
 
 // Import routes

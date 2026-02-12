@@ -6,7 +6,7 @@ import { FastifyPluginAsync } from 'fastify';
 import { z } from 'zod';
 import { db } from '../db/client.js';
 import { baselines, agentSessions } from '../db/schema.js';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 
 const SaveBaselineSchema = z.object({
   agentName: z.string(),
@@ -61,7 +61,7 @@ export const baselineRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 
@@ -92,7 +92,7 @@ export const baselineRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 
@@ -114,7 +114,7 @@ export const baselineRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 };

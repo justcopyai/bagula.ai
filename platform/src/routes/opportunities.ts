@@ -27,7 +27,7 @@ export const opportunityRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 
@@ -101,7 +101,7 @@ export const opportunityRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 
@@ -128,7 +128,7 @@ export const opportunityRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 };

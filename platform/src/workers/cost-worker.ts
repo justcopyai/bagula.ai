@@ -6,7 +6,7 @@
 import { Job } from 'bullmq';
 import { db } from '../db/client.js';
 import { llmCalls, toolCalls, opportunities, agentSessions } from '../db/schema.js';
-import { eq, and, gte, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { SessionAnalysisJob, createSessionAnalysisWorker } from '../queue/manager.js';
 import { appConfig } from '../config.js';
 
@@ -24,7 +24,7 @@ async function processCostAnalysis(job: Job<SessionAnalysisJob>): Promise<void> 
     }
 
     // Fetch all LLM calls and tool calls for this session
-    const [sessionLLMCalls, sessionToolCalls] = await Promise.all([
+    const [sessionLLMCalls, _sessionToolCalls] = await Promise.all([
       db.select().from(llmCalls).where(eq(llmCalls.sessionId, sessionId)),
       db.select().from(toolCalls).where(eq(toolCalls.sessionId, sessionId)),
     ]);

@@ -78,7 +78,7 @@ export type SessionAnalysisProcessor = (job: Job<SessionAnalysisJob>) => Promise
 
 // Create worker for session analysis
 export function createSessionAnalysisWorker(
-  name: string,
+  _name: string,
   processor: SessionAnalysisProcessor,
   concurrency: number = 4
 ): Worker<SessionAnalysisJob> {

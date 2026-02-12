@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { db } from '../db/client.js';
 import { agentSessions, turns, llmCalls, toolCalls } from '../db/schema.js';
 import { enqueueSessionAnalysis } from '../queue/manager.js';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 
 // Validation schemas
 const TurnSchema = z.object({
@@ -154,7 +154,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 
@@ -196,7 +196,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 
@@ -227,7 +227,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       };
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: error.message });
+      return reply.code(500).send({ error: error.message });
     }
   });
 };
