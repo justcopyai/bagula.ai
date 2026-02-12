@@ -1,4 +1,4 @@
-# 🧪 Bagula - AI Agent Operations Platform
+# 🔍 Bagula - AI Agent Monitoring Platform
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
@@ -6,9 +6,9 @@
 [![Built by](https://img.shields.io/badge/Built%20by-JustCopy.ai-purple)](https://justcopy.ai)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2)](https://discord.gg/CjeXJxfSQ8)
 
-> **Your AI agent worked last week. Now it's confidently wrong. Test it before your users find out.**
+> **Monitor, analyze, and optimize your AI agents in production. Every LLM call. Every tool execution. Every opportunity to improve.**
 
-Bagula is an open-source AI agent operations platform that helps you test, monitor, and prevent regressions in your AI agents. Built by [JustCopy.ai](https://justcopy.ai) for the new era of probabilistic software, Bagula detects the 7 critical failure modes that traditional testing misses.
+Bagula is an open-source monitoring and observability platform for AI agents. Built by [JustCopy.ai](https://justcopy.ai), Bagula gives you complete visibility into your agent's behavior in production and automatically detects opportunities for cost optimization, performance improvement, and quality enhancement.
 
 ## 🌐 Website
 
@@ -18,66 +18,69 @@ Bagula is an open-source AI agent operations platform that helps you test, monit
 
 ## The Problem
 
-AI agents fail differently than traditional software:
+AI agents in production are a black box:
 
-1. **🔧 Skill Bloat** - Adding tools beyond ~30 degrades existing capabilities
-2. **📝 Context Rot** - Growing prompts push critical instructions into "lost in the middle" zones
-3. **🎯 Confident Hallucination** - Agents sound authoritative while accuracy drops
-4. **⏱️ Sequential Processing Tax** - Slow API call chains create poor UX
-5. **💰 Cost Creep** - Token inflation accumulates undetected
-6. **🔗 Multi-Agent Cascades** - Formatting drift breaks downstream partners
-7. **🔄 Model Update Surprises** - Provider updates change behavior without code changes
+1. **💰 Hidden Costs** - Expensive tool calls and redundant LLM requests drain budgets
+2. **⏱️ Performance Blind Spots** - Slow operations and timeouts hurt user experience
+3. **🎯 Quality Issues** - Failed tool calls, errors, and retries go unnoticed
+4. **📉 Silent Regressions** - Behavior changes over time without anyone knowing
+5. **🔍 No Visibility** - Can't debug or understand what agents are actually doing
 
-Traditional regression testing doesn't catch these. **Bagula does.**
+**You need to see what's happening inside your agents. Bagula gives you that visibility.**
 
 ---
 
 ## ✨ Features
 
-### 🧪 **Comprehensive Testing Framework**
-- Write tests for AI agents like you write unit tests
-- Define expected behavior, tool usage, and output validation
-- Run tests in parallel for fast feedback
+### 🔍 **Complete Session Recording**
+- Track every LLM call with full request/response
+- Monitor all tool executions with arguments and results
+- Record user feedback and outcomes
+- Full conversation history with timing data
 
-### 📊 **Baseline Tracking**
-- Save agent behavior as baselines
-- Compare current performance against historical behavior
-- Detect subtle regressions across code changes
+### 💰 **Cost Optimization Detection**
+- Identify expensive tool patterns (>$0.10 per call)
+- Detect redundant LLM calls (same input within 5 min)
+- Suggest model downgrades (GPT-4 → GPT-3.5 for simple tasks)
+- Flag excessive token usage
 
-### 💰 **Cost & Latency Monitoring**
-- Track token usage and API costs per test
-- Set budget gates to prevent cost explosions
-- Monitor per-step latency for UX optimization
+### ⚡ **Performance Monitoring**
+- Track latency for every operation
+- Detect slow tool executions (>5s)
+- Identify timeout risks
+- Find opportunities for parallelization
 
-### 🎯 **Confidence Calibration**
-- Measure how well agent confidence matches actual accuracy
-- Detect overconfident or underconfident behavior
-- Expected Calibration Error (ECE) metrics
+### 🎯 **Quality Analysis**
+- Monitor tool failure rates
+- Detect error patterns
+- Identify retry loops
+- Track incomplete sessions
 
-### 🔗 **Multi-Agent Testing**
-- Test collaborative agent workflows
-- Detect cascade failures and formatting drift
-- Validate agent-to-agent communication
+### 📉 **Regression Detection**
+- Compare against baselines using LLM-based semantic analysis
+- Automatic detection of behavior changes
+- Severity scoring for changes
+- Historical trend tracking
 
-### 🔌 **Multi-Provider Support**
-- OpenAI (GPT-4, GPT-4o, GPT-3.5)
-- Anthropic (Claude 3 family)
-- Custom providers
+### 📊 **Beautiful Dashboard**
+- Session explorer with drill-down capabilities
+- LLM call viewer with request/response tabs
+- Tool execution timeline
+- Opportunity cards with actionable insights
+- Cost and performance metrics
 
-### 🚀 **CI/CD Integration**
-- GitHub Actions plugin
-- GitLab CI integration
-- Fail builds on regressions or budget violations
+### 🔌 **Easy Integration**
+- Simple SDK for TypeScript/JavaScript
+- Works with any agent framework
+- Asynchronous batching (non-blocking)
+- Docker-based platform deployment
 
 ---
 
 ## 🚀 Quick Start
 
-### Two Ways to Use Bagula
+### Step 1: Deploy Bagula Platform
 
-#### Option 1: Observability Platform (Recommended for Production)
-
-**1. Deploy Bagula Platform**
 ```bash
 # Clone repo
 git clone https://github.com/justcopyai/bagula.ai.git
@@ -85,9 +88,20 @@ cd bagula.ai/platform
 
 # Start services (API, Database, Workers, Dashboard)
 docker-compose up -d
+
+# Verify platform is running
+curl http://localhost:8000/health
 ```
 
-**2. Instrument Your Agent**
+This starts:
+- **API Server** (port 8000) - Receives session data
+- **PostgreSQL + TimescaleDB** - Stores session data
+- **Redis** - Message queue for workers
+- **Background Workers** - Detect opportunities
+- **Dashboard** (port 3000) - View sessions and insights
+
+### Step 2: Instrument Your Agent
+
 ```bash
 npm install @bagula/client
 ```
@@ -97,26 +111,56 @@ import { BagulaClient } from '@bagula/client';
 
 const bagula = new BagulaClient({
   apiKey: process.env.BAGULA_API_KEY,
-  endpoint: 'http://localhost:8000' // or https://api.bagula.ai
+  endpoint: 'http://localhost:8000'
 });
 
-// Track complete agent sessions
-async function handleUserRequest(request: string) {
-  const tracker = bagula.getSessionTracker();
+// Get session tracker
+const tracker = bagula.getSessionTracker();
 
-  const sessionId = tracker.startSession('my-agent', request);
+// Track agent execution
+async function handleUserRequest(userId: string, request: string) {
+  // Start session
+  const sessionId = tracker.startSession('my-agent', request, { userId });
 
-  // Your agent does work...
+  // Start turn
   const turnId = tracker.startTurn(sessionId, {
     type: 'user_message',
     content: request
   });
 
-  // Track LLM calls
+  // Your agent calls LLM
+  const llmResponse = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [{ role: 'user', content: request }]
+  });
+
+  // Record LLM call
   tracker.recordLLMCall(sessionId, turnId, {
     provider: 'openai',
     model: 'gpt-4',
-    // ... metrics ...
+    messages: [{ role: 'user', content: request }],
+    response: llmResponse,
+    metrics: {
+      tokensInput: llmResponse.usage.prompt_tokens,
+      tokensOutput: llmResponse.usage.completion_tokens,
+      tokensTotal: llmResponse.usage.total_tokens,
+      costUsd: 0.03, // Calculate based on pricing
+      latencyMs: 2300
+    }
+  });
+
+  // If agent uses tools, record them
+  tracker.recordToolCall(sessionId, turnId, {
+    toolName: 'search_database',
+    arguments: { query: 'user data' },
+    result: { found: true },
+    latencyMs: 150
+  });
+
+  // Record agent's response
+  tracker.recordAgentResponse(sessionId, turnId, {
+    message: llmResponse.choices[0].message.content,
+    toolCalls: []
   });
 
   // Complete session
@@ -124,36 +168,18 @@ async function handleUserRequest(request: string) {
     status: 'success',
     userSatisfaction: 5
   });
+
+  return llmResponse.choices[0].message.content;
 }
 ```
 
-**3. View Dashboard**
-- Open http://localhost:3000
-- See real-time monitoring, regressions, anomalies
-- All production sessions tracked automatically
+### Step 3: View Dashboard
 
----
-
-#### Option 2: CLI Testing (For CI/CD)
-
-**1. Install CLI**
-```bash
-npm install -g @bagula/cli
-```
-
-**2. Initialize**
-```bash
-bagula init
-```
-
-**3. Run Tests**
-```bash
-bagula run              # Run all tests
-bagula run --baseline   # Compare with baseline
-bagula ci               # CI mode with strict checks
-```
-
-See [CLI docs](./packages/cli/README.md) for details.
+Open http://localhost:3000 to:
+- View all agent sessions
+- Drill down into LLM calls and tool executions
+- See detected opportunities for improvement
+- Track cost and performance metrics
 
 ---
 
@@ -161,139 +187,156 @@ See [CLI docs](./packages/cli/README.md) for details.
 
 ### Core Concepts
 
-#### Test Cases
+#### Sessions
 
-```typescript
-{
-  "id": "test-1",
-  "name": "Handle refund request",
-  "input": "I want a refund",
-  "expectedBehavior": {
-    "outputContains": ["refund"],
-    "toolsUsed": ["lookup_order", "process_refund"],
-    "maxLatencyMs": 5000,
-    "maxCostUsd": 0.01,
-    "minConfidence": 0.8
-  }
-}
-```
+A **session** represents a complete interaction between a user and your agent, from initial request to final outcome. Each session contains:
+
+- **Turns**: Individual conversation exchanges
+- **LLM Calls**: Every call to an LLM provider with full request/response
+- **Tool Calls**: Every tool execution with arguments and results
+- **Metrics**: Cost, latency, tokens for the entire session
+
+#### Opportunities
+
+Bagula automatically detects **opportunities** for improvement:
+
+**Cost Optimization:**
+- Expensive tool patterns
+- Redundant LLM calls
+- Model downgrade opportunities
+- Excessive token usage
+
+**Performance:**
+- Slow tool executions
+- LLM timeout risks
+- Excessive turns
+- Parallelization opportunities
+
+**Quality:**
+- High tool failure rates
+- Error patterns
+- Retry loops
+- Incomplete sessions
+
+**Regression Detection:**
+- Semantic changes from baseline
+- Behavior drift over time
+- Outcome changes
+
+Each opportunity includes:
+- Severity (low/medium/high)
+- Description of the issue
+- Suggested action
+- Estimated impact (cost savings, latency reduction)
 
 #### Baselines
 
-Bagula automatically tracks agent behavior as baselines. Compare current runs against baselines to detect:
+Save a session as a **baseline** to detect regressions:
 
-- Output changes (semantic similarity)
-- Tool usage changes
-- Performance regressions (latency, cost, tokens)
+```typescript
+// Save current session as baseline
+await api.saveBaseline('my-agent', sessionId);
 
-```bash
-# Save baseline
-bagula baseline save customer-support --tag production
-
-# Compare with baseline
-bagula baseline compare customer-support --tag production
+// Future sessions are automatically compared
+// Opportunities created when significant changes detected
 ```
-
-#### Budget Gates
-
-Set budgets to prevent cost explosions and performance regressions:
-
-```json
-{
-  "budgets": {
-    "maxLatencyMs": 10000,
-    "maxCostPerTestUsd": 0.05,
-    "maxTotalCostUsd": 1.0,
-    "maxTokensPerTest": 5000
-  }
-}
-```
-
-Tests fail if budgets are exceeded.
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-bagula/
-├── packages/
-│   ├── core/           # Core testing framework
-│   ├── cli/            # Command-line interface
-│   ├── dashboard/      # Web dashboard (coming soon)
-│   ├── integrations/   # Framework integrations
-│   └── plugins/        # CI/CD plugins
-├── examples/           # Example projects
-└── docs/              # Documentation
+┌─────────────────┐
+│   Your Agent    │
+│  (instrumented) │
+└────────┬────────┘
+         │ @bagula/client SDK
+         │ (batches sessions)
+         ▼
+┌─────────────────┐
+│   Bagula API    │ ◄──── HTTP POST /v1/sessions/ingest
+│   (FastAPI)     │
+└────────┬────────┘
+         │
+         ├──► PostgreSQL + TimescaleDB (session storage)
+         │
+         └──► Redis Queue
+                │
+                ├──► Cost Worker (detects expensive patterns)
+                ├──► Performance Worker (finds slow operations)
+                ├──► Quality Worker (identifies errors)
+                └──► Regression Worker (compares vs baseline)
+                      │
+                      ▼
+                ┌────────────────┐
+                │  Opportunities │
+                │     Table      │
+                └────────┬───────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │    Dashboard    │
+                │ (React/Next.js) │
+                └─────────────────┘
 ```
 
-### Using as a Library
+### Repository Structure
 
-```typescript
-import { TestRunner, TestSuite, AgentConfig } from '@bagula/core';
-
-const config: AgentConfig = {
-  name: 'my-agent',
-  model: 'gpt-4',
-  provider: 'openai',
-  apiKey: process.env.OPENAI_API_KEY,
-};
-
-const suite: TestSuite = {
-  id: 'my-suite',
-  name: 'My Test Suite',
-  config,
-  tests: [
-    {
-      id: 'test-1',
-      name: 'Test greeting',
-      input: 'Hello!',
-      expectedBehavior: {
-        outputContains: ['hello', 'hi'],
-      },
-    },
-  ],
-};
-
-const runner = new TestRunner();
-const results = await runner.runSuite(suite, {
-  compareBaseline: true,
-  saveBaseline: true,
-});
-
-console.log(`Passed: ${results.summary.passed}/${results.summary.total}`);
+```
+bagula/
+├── packages/
+│   ├── client/         # TypeScript SDK for instrumenting agents
+│   └── dashboard/      # React/Next.js web dashboard
+├── platform/           # Python/FastAPI backend
+│   ├── app/
+│   │   ├── main.py           # API endpoints
+│   │   ├── database.py       # PostgreSQL integration
+│   │   ├── queue.py          # Redis queue manager
+│   │   ├── analyzer.py       # Metrics and analysis
+│   │   └── workers/          # Background opportunity detection
+│   ├── init-db.sql           # Database schema
+│   └── docker-compose.yml    # Full platform deployment
+└── docs/               # Documentation
 ```
 
 ---
 
-## 🔌 Integrations
+## 🔌 Framework Integration Examples
 
-### GitHub Actions
+Bagula works with any agent framework. Here are some examples:
 
-```yaml
-name: AI Agent Tests
+### LangChain
 
-on: [push, pull_request]
+```typescript
+import { BagulaClient } from '@bagula/client';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm install -g @bagula/cli
-      - run: bagula ci
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+const bagula = new BagulaClient({ /* config */ });
+const tracker = bagula.getSessionTracker();
+
+// Wrap your LangChain calls
+const sessionId = tracker.startSession('langchain-agent', userInput);
+const turnId = tracker.startTurn(sessionId, { type: 'user_message', content: userInput });
+
+const model = new ChatOpenAI();
+const startTime = Date.now();
+const response = await model.call([{ role: 'user', content: userInput }]);
+const latency = Date.now() - startTime;
+
+tracker.recordLLMCall(sessionId, turnId, {
+  provider: 'openai',
+  model: 'gpt-3.5-turbo',
+  messages: [{ role: 'user', content: userInput }],
+  response: response,
+  metrics: { latencyMs: latency, /* ... */ }
+});
+
+tracker.completeSession(sessionId, { status: 'success' });
 ```
 
-### Framework Integrations
+### Custom Agents
 
-Coming soon:
-- LangChain
-- CrewAI
-- AutoGPT
-- Microsoft Semantic Kernel
+Works with any agent implementation - just add tracking calls around your LLM and tool invocations.
 
 ---
 
@@ -303,13 +346,14 @@ Bagula is open-source (Apache 2.0) and free forever. For enterprise features, we
 
 ### Bagula Cloud Features
 
-- 🌐 **Hosted Dashboard** - Beautiful web UI for all your tests
-- 📈 **Advanced Analytics** - Trends, anomaly detection, cost forecasting
-- 🤖 **Autonomous Root Cause Analysis** - AI agents debug your AI agents
-- 🔧 **Auto-Remediation** - Automatically fix regressions
-- 👥 **Team Collaboration** - Share results, annotations, and insights
-- 🔐 **Enterprise Security** - SSO, audit logs, compliance
-- 📞 **Priority Support** - Dedicated support channel
+- 🌐 **Hosted Platform** - Managed infrastructure, no Docker required
+- 📈 **Advanced Analytics** - Trends, forecasting, custom dashboards
+- 🤖 **AI-Powered Insights** - Automatic root cause analysis of issues
+- 🔧 **Auto-Optimization** - Apply suggested improvements automatically
+- 👥 **Team Collaboration** - Multi-user workspaces, role-based access
+- 🔐 **Enterprise Security** - SSO, SOC 2, audit logs, data residency
+- 📞 **Priority Support** - Dedicated support channel with SLA
+- 📊 **Custom Integrations** - Slack, PagerDuty, DataDog, and more
 
 **Learn more at [bagula.ai](https://bagula.ai)**
 

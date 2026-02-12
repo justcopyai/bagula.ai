@@ -1,0 +1,21 @@
+{
+  "name": "bagula-simple-agent-example",
+  "version": "1.0.0",
+  "description": "Simple AI agent instrumented with Bagula monitoring",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts"
+  },
+  "dependencies": {
+    "@bagula/client": "workspace:*",
+    "openai": "^4.24.1",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0"
+  }
+}

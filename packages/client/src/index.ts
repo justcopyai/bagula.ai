@@ -49,6 +49,29 @@ export interface SpanMetrics {
   confidence?: number;
 }
 
+/**
+ * Opportunity detected by Bagula platform
+ * Represents a detected improvement opportunity for cost, performance, quality, or regression
+ */
+export interface Opportunity {
+  opportunityId: string;
+  sessionId: string;
+  agentName: string;
+  type: 'cost' | 'performance' | 'quality' | 'regression';
+  severity: 'low' | 'medium' | 'high';
+  title: string;
+  description?: string;
+  suggestedAction?: string;
+  estimatedImpact?: {
+    costSavingsUsd?: number;
+    latencyReductionMs?: number;
+    qualityImprovement?: number;
+  };
+  detectedAt: string;
+  resolved: boolean;
+  resolutionNote?: string;
+}
+
 export class BagulaClient {
   private config: Required<BagulaConfig>;
   private httpClient: AxiosInstance;

@@ -1,7 +1,7 @@
 {
   "name": "bagula",
   "version": "0.1.0",
-  "description": "Bagula - AI Agent Operations Platform. Test, monitor, and prevent regressions in your AI agents.",
+  "description": "Bagula - AI Agent Monitoring and Observability Platform. Track, analyze, and optimize your AI agents in production.",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -31,14 +31,17 @@
   "keywords": [
     "ai",
     "agents",
-    "testing",
-    "regression",
     "llm",
     "monitoring",
     "observability",
+    "analytics",
+    "telemetry",
+    "tracing",
     "devops",
     "aiops",
-    "context-engineering"
+    "agent-ops",
+    "cost-optimization",
+    "performance-monitoring"
   ],
   "author": "Bagula Contributors",
   "license": "Apache-2.0",

@@ -47,6 +47,8 @@ services:
       DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
       REDIS_URL: redis://redis:6379/0
       LOG_LEVEL: info
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
     ports:
       - "8000:8000"
     depends_on:
@@ -56,51 +58,66 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-  # Background Worker (Baseline Comparison)
-  worker-baseline:
+  # Background Worker (Cost Detection)
+  worker-cost:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bagula-worker-baseline
-    command: python -m app.workers.baseline_worker
+    container_name: bagula-worker-cost
+    command: node dist/workers/cost-worker.js
     environment:
       DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
       REDIS_URL: redis://redis:6379/0
-      WORKER_TYPE: baseline
       LOG_LEVEL: info
     depends_on:
       - database
       - redis
     restart: unless-stopped
 
-  # Background Worker (Anomaly Detection)
-  worker-anomaly:
+  # Background Worker (Performance Detection)
+  worker-performance:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bagula-worker-anomaly
-    command: python -m app.workers.anomaly_worker
+    container_name: bagula-worker-performance
+    command: node dist/workers/performance-worker.js
     environment:
       DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
       REDIS_URL: redis://redis:6379/0
-      WORKER_TYPE: anomaly
       LOG_LEVEL: info
     depends_on:
       - database
       - redis
     restart: unless-stopped
 
-  # Background Worker (Metrics Aggregation)
-  worker-metrics:
+  # Background Worker (Quality Detection)
+  worker-quality:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bagula-worker-metrics
-    command: python -m app.workers.metrics_worker
+    container_name: bagula-worker-quality
+    command: node dist/workers/quality-worker.js
     environment:
       DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
       REDIS_URL: redis://redis:6379/0
-      WORKER_TYPE: metrics
+      LOG_LEVEL: info
+    depends_on:
+      - database
+      - redis
+    restart: unless-stopped
+
+  # Background Worker (Regression Detection)
+  worker-regression:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bagula-worker-regression
+    command: node dist/workers/regression-worker.js
+    environment:
+      DATABASE_URL: postgresql://bagula:${DB_PASSWORD:-bagula_dev_password}@database:5432/bagula
+      REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       LOG_LEVEL: info
     depends_on:
       - database

@@ -1,27 +1,37 @@
-FROM python:3.11-slim
+# Bagula Platform - TypeScript/Node.js Dockerfile
+
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    postgresql-client \
-    redis-tools \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package files
+COPY package.json package-lock.json* ./
 
-# Copy requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+RUN npm ci
 
-# Copy application
+# Copy source code
 COPY . .
 
-# Expose ports
+# Build TypeScript
+RUN npm run build
+
+# Production image
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Copy built files from builder
+COPY --from=builder /app/dist ./dist
+
+# Expose port
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# Run application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start server
+CMD ["node", "dist/index.js"]
