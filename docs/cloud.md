@@ -18,7 +18,7 @@ Bagula Cloud uses the exact same open source container that powers self-hosted d
 
 ### 1. Sign Up
 
-Visit [bagula.cloud](https://bagula.cloud) and create an account.
+Visit [bagula.ai](https://bagula.ai) and create an account.
 
 1. Enter your email and password (or use GitHub/Google OAuth)
 2. Verify your email
@@ -51,7 +51,7 @@ import { BagulaClient } from '@bagula/client';
 
 const bagula = new BagulaClient({
   apiKey: process.env.BAGULA_API_KEY, // Your cloud API key
-  endpoint: 'https://api.bagula.cloud', // Cloud endpoint
+  endpoint: 'https://api.bagula.ai', // Cloud endpoint
 });
 
 // Use as normal
@@ -61,7 +61,7 @@ const tracker = bagula.getSessionTracker();
 
 ### 4. View Dashboard
 
-Login to [dashboard.bagula.cloud](https://dashboard.bagula.cloud) to view:
+Login to [dashboard.bagula.ai](https://dashboard.bagula.ai) to view:
 - All your agent sessions
 - Detected opportunities
 - Cost and performance metrics
@@ -340,7 +340,7 @@ After retention period:
 ```bash
 # Via API
 curl -H "Authorization: Bearer your-api-key" \
-  https://api.bagula.cloud/v1/export/sessions?from=2024-01-01&to=2024-01-31
+  https://api.bagula.ai/v1/export/sessions?from=2024-01-01&to=2024-01-31
 
 # Or use dashboard
 Dashboard → Export → Date Range → Download JSON/CSV
@@ -374,8 +374,8 @@ const bagula = new BagulaClient({
 
 // After (cloud)
 const bagula = new BagulaClient({
-  apiKey: 'bagula_prod_xxxxxxxxx', // Get from bagula.cloud
-  endpoint: 'https://api.bagula.cloud'
+  apiKey: 'bagula_prod_xxxxxxxxx', // Get from bagula.ai
+  endpoint: 'https://api.bagula.ai'
 });
 ```
 
@@ -395,7 +395,7 @@ Want to move back to self-hosted? No problem.
 
 ```bash
 curl -H "Authorization: Bearer your-api-key" \
-  https://api.bagula.cloud/v1/export/all > export.sql
+  https://api.bagula.ai/v1/export/all > export.sql
 ```
 
 ### 2. Deploy Self-Hosted
@@ -491,4 +491,4 @@ A: Starter/Pro: Business hours (9am-5pm ET). Enterprise: 24/7 coverage.
 - **Support:** support@bagula.ai
 - **General:** hello@bagula.ai
 
-**Start your free trial:** [bagula.cloud](https://bagula.cloud)
+**Start your free trial:** [bagula.ai](https://bagula.ai)

@@ -126,7 +126,7 @@ docker run -d \
 
 No infrastructure needed - we run it for you.
 
-1. Sign up at [bagula.cloud](https://bagula.cloud)
+1. Sign up at [bagula.ai](https://bagula.ai)
 2. Get your API key
 3. Instrument your agents (see Step 2 below)
 
@@ -145,7 +145,7 @@ import { BagulaClient } from '@bagula/client';
 
 const bagula = new BagulaClient({
   apiKey: process.env.BAGULA_API_KEY,
-  endpoint: 'http://localhost:8000'
+  endpoint: 'http://localhost:8000'  // or 'https://api.bagula.ai' for cloud
 });
 
 // Get session tracker
@@ -213,7 +213,7 @@ async function handleUserRequest(userId: string, request: string) {
 Open http://localhost:3000 to view your sessions
 
 **Bagula Cloud:**
-Login to https://dashboard.bagula.cloud
+Login to https://dashboard.bagula.ai
 
 You'll see:
 - All agent sessions with full drill-down
@@ -476,7 +476,7 @@ This architecture ensures:
 - **Pro**: $99/month - 50K sessions, 250K LLM calls, + usage
 - **Enterprise**: Custom - Unlimited, SSO, dedicated support
 
-**[Start Free Trial →](https://bagula.cloud)**
+**[Start Free Trial →](https://bagula.ai)**
 
 ---
 
