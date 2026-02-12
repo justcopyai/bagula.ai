@@ -79,14 +79,22 @@ AI agents in production are a black box:
 
 ## 🚀 Quick Start
 
-### Step 1: Deploy Bagula Platform
+Bagula provides two components:
+1. **@bagula/client** - NPM package for instrumenting your agents
+2. **bagula/platform** - Docker container with the full monitoring platform
+
+You can either:
+- **Self-host**: Run the platform yourself (free, open source)
+- **Use Bagula Cloud**: We host it for you (managed service)
+
+### Option A: Self-Hosted (Docker Compose)
 
 ```bash
 # Clone repo
 git clone https://github.com/justcopyai/bagula.ai.git
 cd bagula.ai/platform
 
-# Start services (API, Database, Workers, Dashboard)
+# Start all services
 docker-compose up -d
 
 # Verify platform is running
@@ -97,8 +105,34 @@ This starts:
 - **API Server** (port 8000) - Receives session data
 - **PostgreSQL + TimescaleDB** - Stores session data
 - **Redis** - Message queue for workers
-- **Background Workers** - Detect opportunities
+- **4 Background Workers** - Detect opportunities
 - **Dashboard** (port 3000) - View sessions and insights
+
+### Option B: Self-Hosted (Docker Container)
+
+```bash
+# Pull the official Bagula container
+docker pull ghcr.io/justcopyai/bagula/platform:latest
+
+# Run with your own PostgreSQL and Redis
+docker run -d \
+  -p 8000:8000 \
+  -e DATABASE_URL=postgresql://... \
+  -e REDIS_URL=redis://... \
+  ghcr.io/justcopyai/bagula/platform:latest
+```
+
+### Option C: Bagula Cloud (Managed)
+
+No infrastructure needed - we run it for you.
+
+1. Sign up at [bagula.cloud](https://bagula.cloud)
+2. Get your API key
+3. Instrument your agents (see Step 2 below)
+
+---
+
+### Step 2: Instrument Your Agent
 
 ### Step 2: Instrument Your Agent
 
@@ -175,11 +209,52 @@ async function handleUserRequest(userId: string, request: string) {
 
 ### Step 3: View Dashboard
 
-Open http://localhost:3000 to:
-- View all agent sessions
-- Drill down into LLM calls and tool executions
-- See detected opportunities for improvement
-- Track cost and performance metrics
+**Self-Hosted:**
+Open http://localhost:3000 to view your sessions
+
+**Bagula Cloud:**
+Login to https://dashboard.bagula.cloud
+
+You'll see:
+- All agent sessions with full drill-down
+- LLM calls with request/response details
+- Tool executions with timing
+- Detected opportunities for improvement
+- Cost and performance metrics over time
+
+---
+
+## 🐳 Using the Container
+
+Bagula publishes an official Docker container that includes the complete platform:
+
+```bash
+# Pull latest version
+docker pull ghcr.io/justcopyai/bagula/platform:latest
+
+# Or specific version
+docker pull ghcr.io/justcopyai/bagula/platform:v0.1.0
+```
+
+The container includes:
+- API server (Fastify/TypeScript)
+- Background workers (cost, performance, quality, regression)
+- Dashboard (Next.js)
+
+**Required Environment Variables:**
+```bash
+DATABASE_URL=postgresql://user:pass@host:5432/bagula
+REDIS_URL=redis://host:6379/0
+NODE_ENV=production
+```
+
+**Optional Configuration:**
+```bash
+OPENAI_API_KEY=sk-...              # For regression detection
+ANTHROPIC_API_KEY=sk-ant-...       # Alternative for regression detection
+COST_EXPENSIVE_THRESHOLD_USD=0.10  # Cost alert threshold
+PERFORMANCE_SLOW_TOOL_THRESHOLD_MS=5000  # Performance alert threshold
+```
 
 ---
 
@@ -340,22 +415,68 @@ Works with any agent implementation - just add tracking calls around your LLM an
 
 ---
 
-## 💼 Enterprise
+## ☁️ Bagula Cloud (Managed Service)
 
-Bagula is open-source (Apache 2.0) and free forever. For enterprise features, we offer **Bagula Cloud**:
+Bagula is **100% open source and free** to self-host forever. For teams who want a managed solution, we offer **Bagula Cloud**:
 
-### Bagula Cloud Features
+### What's Included
 
-- 🌐 **Hosted Platform** - Managed infrastructure, no Docker required
-- 📈 **Advanced Analytics** - Trends, forecasting, custom dashboards
-- 🤖 **AI-Powered Insights** - Automatic root cause analysis of issues
-- 🔧 **Auto-Optimization** - Apply suggested improvements automatically
-- 👥 **Team Collaboration** - Multi-user workspaces, role-based access
-- 🔐 **Enterprise Security** - SSO, SOC 2, audit logs, data residency
-- 📞 **Priority Support** - Dedicated support channel with SLA
-- 📊 **Custom Integrations** - Slack, PagerDuty, DataDog, and more
+**Core Platform** (uses the open source container)
+- All features from open source
+- Automatic updates
+- Managed infrastructure
+- 99.9% uptime SLA
 
-**Learn more at [bagula.ai](https://bagula.ai)**
+**Cloud-Exclusive Features**
+- 👥 **Multi-Tenancy** - Multiple organizations and teams
+- 🔐 **Authentication** - SSO (SAML/OIDC), team invitations, role-based access
+- 💳 **Usage-Based Billing** - Only pay for what you use
+- 📊 **Advanced Analytics** - Trends, forecasting, custom dashboards
+- 🤖 **AI-Powered Insights** - Automatic root cause analysis
+- 🔧 **Auto-Remediation** - Apply optimizations automatically
+- 📞 **Priority Support** - Dedicated support with SLA
+- 🔌 **Integrations** - Slack, PagerDuty, DataDog, and more
+
+### How It Works
+
+Bagula Cloud uses the **exact same open source container** (`ghcr.io/justcopyai/bagula/platform`) that you can run yourself. We add a lightweight proxy layer for:
+
+- **Multi-tenancy**: Isolates data by organization
+- **Authentication**: User login and team management (via Clerk)
+- **Billing**: Usage tracking and subscriptions (via Stripe)
+
+```
+┌──────────────────────────────────────────┐
+│          Bagula Cloud                    │
+│                                          │
+│  ┌────────────────────────────────────┐ │
+│  │   Auth + Billing Layer (Closed)   │ │  ← Cloud-only
+│  │   (Clerk, Stripe, Multi-tenancy)  │ │
+│  └─────────────┬──────────────────────┘ │
+│                │                          │
+│  ┌─────────────▼──────────────────────┐ │
+│  │  Open Source Container             │ │  ← You can run this
+│  │  ghcr.io/justcopyai/bagula/platform│ │
+│  │  (API, Workers, Dashboard)         │ │
+│  └────────────────────────────────────┘ │
+│                                          │
+│  RDS PostgreSQL + ElastiCache Redis      │
+└──────────────────────────────────────────┘
+```
+
+This architecture ensures:
+✅ Open source stays 100% functional
+✅ No vendor lock-in
+✅ Easy migration between self-hosted and cloud
+✅ Same features in both versions
+
+### Pricing
+
+- **Starter**: $29/month - 10K sessions, 50K LLM calls
+- **Pro**: $99/month - 50K sessions, 250K LLM calls, + usage
+- **Enterprise**: Custom - Unlimited, SSO, dedicated support
+
+**[Start Free Trial →](https://bagula.cloud)**
 
 ---
 
