@@ -4,16 +4,14 @@ import { UserButton, OrganizationSwitcher, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Activity, CreditCard, Settings, Key } from 'lucide-react';
 
-// Check if running in cloud mode (with Clerk) or self-hosted mode
-const isCloudMode = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // In cloud mode, get user/org from Clerk
-  const { user } = isCloudMode ? useUser() : { user: null };
+  // Always use Clerk hooks - they handle missing auth gracefully
+  const { user } = useUser();
+  const isCloudMode = !!user; // Cloud mode = user is logged in via Clerk
 
   return (
     <div className="flex h-screen bg-gray-100">
